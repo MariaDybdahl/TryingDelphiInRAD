@@ -27,12 +27,27 @@ object Form1: TForm1
     Height = 4
     TabOrder = 1
   end
-  object listOfUsers: TListBox
-    Left = 296
-    Top = 56
-    Width = 241
+  object lvUsers: TListView
+    Left = 271
+    Top = 40
+    Width = 345
     Height = 361
-    ItemHeight = 15
+    Columns = <
+      item
+        Caption = 'FullName'
+      end
+      item
+        Caption = 'Gender'
+      end
+      item
+        Caption = 'Email'
+      end
+      item
+        Caption = 'Phone'
+      end
+      item
+        Caption = 'Country'
+      end>
     TabOrder = 2
   end
 end
