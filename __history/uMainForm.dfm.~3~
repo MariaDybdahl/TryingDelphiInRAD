@@ -1,0 +1,38 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object btnText: TButton
+    Left = 24
+    Top = 56
+    Width = 75
+    Height = 25
+    Caption = 'Show Text'
+    TabOrder = 0
+    OnClick = btnTextClick
+  end
+  object textFromBTN: TStaticText
+    Left = 152
+    Top = 56
+    Width = 52
+    Height = 4
+    TabOrder = 1
+  end
+  object listOfUsers: TListBox
+    Left = 296
+    Top = 56
+    Width = 241
+    Height = 361
+    ItemHeight = 15
+    TabOrder = 2
+  end
+end

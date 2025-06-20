@@ -1,0 +1,61 @@
+unit uMainForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, IdHTTP, System.JSON;
+
+type
+  TForm1 = class(TForm)
+  btnText: TButton;
+  textFromBTN: TStaticText;
+    listOfUsers: TListBox;
+  procedure btnTextClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+     {$R *.dfm}
+
+procedure TForm1.btnTextClick(Sender: TObject);
+   var
+  http: TIdHTTP;
+
+  jsonStr: string;
+  jsonArr: TJSONArray;
+  jsonObj: TJSONObject;
+  i: Integer;
+
+begin
+textFromBTN.Caption := 'Henter 10 users';
+http := TIdHTTP.Create(nil);
+  try
+    jsonStr := http.Get('https://jsonplaceholder.typicode.com/users');
+   jsonArr := TJSONValue.ParseJSONValue(jsonStr) as TJSONArray;
+
+    textFromBTN.Caption := 'Clear Boz';
+    listOfUsers.Items.Clear;
+
+    for i := 0 to jsonArr.Count - 1 do
+    begin
+      jsonObj := jsonArr.Items[i] as TJSONObject;
+      listOfUsers.Items.Add(jsonObj.GetValue<string>('name') + ' (' +
+                         jsonObj.GetValue<string>('email') + ')');
+    end;
+
+    jsonArr.Free;
+  finally
+    http.Free;
+  end;
+
+end;
+
+end.
+
