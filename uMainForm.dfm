@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 441
-  ClientWidth = 624
+  ClientHeight = 613
+  ClientWidth = 899
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,33 +21,38 @@ object Form1: TForm1
     OnClick = btnTextClick
   end
   object textFromBTN: TStaticText
-    Left = 152
-    Top = 56
-    Width = 4
+    Left = 31
+    Top = 128
+    Width = 68
     Height = 4
     TabOrder = 1
   end
   object lvUsers: TListView
-    Left = 271
-    Top = 40
-    Width = 345
+    Left = 248
+    Top = 56
+    Width = 617
     Height = 361
     Columns = <
       item
         Caption = 'FullName'
+        Width = 120
       end
       item
         Caption = 'Gender'
       end
       item
         Caption = 'Email'
+        Width = 200
       end
       item
         Caption = 'Phone'
+        Width = 130
       end
       item
         Caption = 'Country'
+        Width = 100
       end>
     TabOrder = 2
+    ViewStyle = vsReport
   end
 end

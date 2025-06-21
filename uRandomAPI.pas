@@ -2,8 +2,8 @@
 
 interface
     uses
-    SysUtils, HTTPApp, IdHTTP, XMLDoc, XMLIntf, ActiveX,
-             System.Classes,
+    SysUtils, HTTPApp, IdHTTP, XMLDoc, XMLIntf, ActiveX,  Person,
+             System.Classes,    System.Generics.Collections,
   System.JSON,          // ← JSON-håndtering (TJSONObject, TJSONArray, m.m.)
   Vcl.Dialogs;          // ← ShowMessage og dialoger
 
@@ -13,6 +13,13 @@ const ServerAddress = 'https://randomuser.me/api/';
 //    CoResult: Integer;
  http: TIdHTTP;
  Response: string;
+ JSONStr: string;
+ JSONArray: TJSONArray;
+ JSONObject, NameObj, DOBObj, LocationObj: TJSONObject;
+ JSONList: TStringList;
+ RootObj: TJSONObject;
+ PersonObj: TPerson;
+ I: Integer;
 //    Query: String;
 //    Buffer: String;
 //    Doc: IXMLDocument;
@@ -20,30 +27,60 @@ const ServerAddress = 'https://randomuser.me/api/';
 //
 //ServerAddress := 'https://randomuser.me/api/';
 FullURL: string;
-    function GetHTTP: TStringList;
-
+    function GetHTTP: string;
+    function CleanJsonToPersonList: TList<TPerson>;
 implementation
 
 
-function GetHTTP: TStringList;
+function GetHTTP: string;
   begin
      FullURL := ServerAddress + '?results=10';
-     Result := TStringList.Create;
      http:= TIdHTTP.Create(nil);
      try
 
-           Response:= http.Get(FullURL);
 
-           Result.Text:= Response;
+     Result := http.Get(FullURL);
+
+
      finally
        http.Free;
      end;
 
   end;
 
-//  function CleanJsonFormToCleanList(Const Users: TStringList): TStringList
-//  begin
-//
-//  end;
+  function CleanJsonToPersonList: TList<TPerson>;
+    begin
+          Result := TList<TPerson>.Create;
+         JSONStr := GetHTTP;
+         RootObj := TJSONObject.ParseJSONValue(JSONStr) as TJSONObject;
+         try
+           JSONArray := RootObj.GetValue('results') as TJSONArray;
+           for I := 0 to JSONArray.Count - 1 do
+            begin
+
+              JSONObject := JSONArray.Items[I] as TJSONObject;
+              NameObj := JSONObject.GetValue('name') as TJSONObject;
+              LocationObj := JSONObject.GetValue('location') as TJSONObject;
+              DOBObj := JSONObject.GetValue('dob') as TJSONObject;
+
+              PersonObj := TPerson.Create;
+              PersonObj.FirstName := NameObj.GetValue('first').Value;
+              PersonObj.Gender := JSONObject.GetValue('gender').Value;
+              PersonObj.LastName := NameObj.GetValue('last').Value;
+              PersonObj.Phone := JSONObject.GetValue('phone').Value;
+              PersonObj.Country := LocationObj.GetValue('country').Value;
+              PersonObj.Email := JSONObject.GetValue('email').Value;
+
+              Result.Add(PersonObj);
+
+
+            end;
+
+         finally
+          RootObj.Free
+         end;
+
+
+    end;
 end.
 

@@ -3,7 +3,8 @@ program Project1;
 uses
   Vcl.Forms,
   uMainForm in 'uMainForm.pas' {Form1},
-  uRandomAPI in 'uRandomAPI.pas';
+  uRandomAPI in 'uRandomAPI.pas',
+  Person in 'Person.pas';
 
 {$R *.res}
 

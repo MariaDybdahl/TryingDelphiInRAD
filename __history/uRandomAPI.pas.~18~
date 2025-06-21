@@ -1,0 +1,65 @@
+﻿unit uRandomAPI;
+
+interface
+    uses
+    SysUtils, HTTPApp, IdHTTP, XMLDoc, XMLIntf, ActiveX,
+             System.Classes,
+  System.JSON,          // ← JSON-håndtering (TJSONObject, TJSONArray, m.m.)
+  Vcl.Dialogs;          // ← ShowMessage og dialoger
+
+const ServerAddress = 'https://randomuser.me/api/';
+
+  var
+//    CoResult: Integer;
+ http: TIdHTTP;
+ Response: string;
+ JSONStr: string;
+ JSONArray: TJSONArray;
+ JSONObject: TJSONObject;
+ JSONList: TStringList;
+ RootObj: TJSONObject;
+ I: Integer;
+//    Query: String;
+//    Buffer: String;
+//    Doc: IXMLDocument;
+//    Node: IXMLNode;
+//
+//ServerAddress := 'https://randomuser.me/api/';
+FullURL: string;
+    function GetHTTP: string;
+     function CleanJsonFormToCleanList: TStringList;
+
+implementation
+
+
+function GetHTTP: string;
+  begin
+     FullURL := ServerAddress + '?results=10';
+     http:= TIdHTTP.Create(nil);
+     try
+
+
+     Result := http.Get(FullURL);
+
+
+     finally
+       http.Free;
+     end;
+
+  end;
+
+  function CleanJsonFormToCleanList: TStringList;
+    begin
+         JSONStr := GetHTTP;
+         RootObj := TJSONObject.ParseJSONValue(JSONStr) as TJSONObject;
+         try
+           JSONArray := RootObj.GetValue('results') as TJSONArray;
+           for I := 0 to JSONArray.Count - 1 do
+           WriteLN(I);
+         finally
+          RootObj.Free
+         end;
+
+    end;
+end.
+

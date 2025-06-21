@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, IdHTTP, System.JSON, uRandomAPI,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, IdHTTP, System.JSON, uRandomAPI,  System.Generics.Collections,   Person,
   Vcl.ComCtrls;
 
 type
@@ -13,7 +13,7 @@ type
   textFromBTN: TStaticText;
     lvUsers: TListView;
   procedure btnTextClick(Sender: TObject);
-    
+
   private
     { Private declarations }
   public
@@ -25,27 +25,51 @@ var
 
 implementation
      {$R *.dfm}
-
+                 {$APPTYPE CONSOLE}
 procedure TForm1.btnTextClick(Sender: TObject);
-   var
- Users: TStringList;
- JSON: TJSONObject;
-
-
+var
+  Users: TList<TPerson>;
+  P: TPerson;
+  Item: TListItem;
+   I: Integer;
 begin
-textFromBTN.Caption := 'Henter 10 users';
+  try
+    textFromBTN.Caption := 'Henter 10 users...';
 
+    lvUsers.Items.BeginUpdate;
+    try
+      lvUsers.Clear;
 
-Users:= uRandomAPI.GetHTTP;
+      Users := CleanJsonToPersonList;
 
-try
-
-
-
-finally
-  Users.Free;
-end;
-
+      for P in Users do
+      begin
+        if not Assigned(P) then
+        begin
+          ShowMessage('Fejl: En TPerson i listen er nil!');
+          Continue;
+        end;
+       
+        Item := lvUsers.Items.Add;
+        Item.Caption := P.FullName;
+        Item.SubItems.Add(P.Gender);
+        Item.SubItems.Add(P.Email);
+        Item.SubItems.Add(P.Phone);
+        Item.SubItems.Add(P.Country);
+       
+      end;
+    finally
+  
+      lvUsers.Items.EndUpdate;
+               
+      for P in Users do
+        P.Free;
+      Users.Free;
+    end;
+  except
+    on E: Exception do
+      ShowMessage('Fejl: ' + E.Message);
+  end;
 end;
 
 
